@@ -4,7 +4,7 @@ Wirebarley CodingTest Type_B
 <h2>사용기술</h2>
 
 - spring boot
--lombok
+- lombok
 
 <h2>구동방법</h2>
 ```
