@@ -42,7 +42,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 		ExchangeRateRes res = new ExchangeRateRes();
 		res.setReceptionCountry(receptionCountry);
 		res.setRemittanceCountry(remittanceCountry);
-		res.setExchangeRate(receptionCountryRate.divide(remittanceCountryRate, 2, BigDecimal.ROUND_DOWN).floatValue());
+		res.setExchangeRate(receptionCountryRate.divide(remittanceCountryRate, 2, BigDecimal.ROUND_DOWN).toString());
 		
 		return res;
 	}
@@ -50,8 +50,9 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 	@Override
 	public ExchangeRateRes calcReceptionPrice(RemittanceCountry remittanceCountry, ReceptionCountry receptionCountry, Float receptionPrice) throws Exception {
 		ExchangeRateRes res = getExchangeRate(remittanceCountry, receptionCountry);
-		res.setReceptionPrice(receptionPrice);
-		res.setCalcPrice(new BigDecimal(receptionPrice * res.getExchangeRate()).setScale(2, BigDecimal.ROUND_DOWN).floatValue());
+		res.setReceptionPrice(String.valueOf(receptionPrice));
+		String calcPrice = new BigDecimal(receptionPrice).multiply(new BigDecimal(res.getExchangeRate())).setScale(2, BigDecimal.ROUND_DOWN).toString();
+		res.setCalcPrice(calcPrice);
 		return res;
 	}
 	
@@ -80,6 +81,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 	}
 	
 	/**
+	 * currencylayer API에서 currencies 항목의 Param을 String 항목으로 반환한다.
 	 * 
 	 * @return String
 	 */

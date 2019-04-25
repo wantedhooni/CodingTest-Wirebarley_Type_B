@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<title>Title</title>
+<title>와이어바알리 코딩 테스트</title>
 </head>
 <body>
-	<h1>Hello2</h1>
+	<h1>와이어바알리 코딩 테스트</h1>
 	<table class="table table-striped">
 		<tbody>
 			<tr>
@@ -25,7 +25,7 @@
 			</tr>
 			<tr>
 				<td>송금액 : </td>
-				<td><input id="input_price" type="number" min="0" max="10000" onkeyup="imsi(this);"> USD</td>
+				<td><input id="input_price" type="number" min="0" max="10000"> USD</td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="button" value="SUBMIT"	onclick="calcReceptionPrice();"></td>
@@ -41,11 +41,9 @@
 
 <script type="text/javascript">
 $(function() {
-    console.log( "ready!" );
     getRemittanceCountrys();
     getReceptionCountrys();
 });
-
 
 
 function getRemittanceCountrys(){
@@ -91,13 +89,11 @@ function getExchangeRate(){
 	var remittanceCountryCode = $("#RemittanceCountry").val();
 	var receptionCountryCode = $("#ReceptionCountry").val();
 	
+	/**
 	console.log("remittanceCountryCode :"+remittanceCountryCode );
 	console.log("receptionCountryCode :"+receptionCountryCode );
-	/*
-	if(remittanceCountryCode == '' || receptionCountryCode ==''){
-		return;
-	}
 	*/
+	
 	$.ajax({
 		 type: "POST",
 		 url: "/getExchangeRate",
@@ -107,11 +103,10 @@ function getExchangeRate(){
 			 receptionCountry : receptionCountryCode
 		 },
 		 success: function(result){
-		  //SELECT BOX 초기화           
 		  console.log(result);
-		  var exchangeRate = result.exchangeRate;
+		  var exchangeRate = Number(result.exchangeRate);
 		  exchangeRate = exchangeRate.toFixed(2);
-		  exchangeRate = addComma(exchangeRate); 
+		  exchangeRate = comma(exchangeRate); 
 		  $("#ExchangeRate").text(exchangeRate+ " "+ result.receptionCountryCode + "/" +result.remittanceCountryCode);
 		  },
 		   error: function (jqXHR, textStatus) {
@@ -126,10 +121,11 @@ function calcReceptionPrice(){
 	var receptionCountryCode = $("#ReceptionCountry").val();
 	var price = $("#input_price").val();
 	
+	/**
 	console.log("remittanceCountryCode :"+remittanceCountryCode );
 	console.log("receptionCountryCode :"+receptionCountryCode );
 	console.log("price :"+price );
-
+	*/
 	$.ajax({
 		 type: "POST",
 		 url: "/calcReceptionPrice",
@@ -141,11 +137,7 @@ function calcReceptionPrice(){
 		 },
 		 success: function(result){
 		  console.log(result);
-		  var exchangeRate = result.exchangeRate;
-		  exchangeRate = exchangeRate.toFixed(2);
-		  exchangeRate = addComma(exchangeRate); 
-			  
-		  $("#calcPrice").text("수취금액은 " +result.calcPrice + " "+result.receptionCountryCode + " 입니다.");
+		  $("#calcPrice").text("수취금액은 " + comma(result.calcPrice) + " "+result.receptionCountryCode + " 입니다.");
 		  },
 		   error: function (jqXHR, textStatus, errorThrown) {
 			   alert(jqXHR.responseText);
@@ -154,22 +146,17 @@ function calcReceptionPrice(){
 
 }
 
-function addComma(num) {
-	  var regexp = /\B(?=(\d{3})+(?!\d))/g;
-	  return num.toString().replace(regexp, ',');
-}
-
-function imsi(obj) {
-	var prev = "";
-	var regexp = /^\d*(\.\d{0,2})?$/;
-    if(obj.value.search(regexp)==-1) { 
-        obj.value = prev; 
-    } 
-    else { 
-        prev = obj.value; 
-    } 
+// 콤마 추가
+function comma(str) { 
+    str = String(str); 
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'); 
 } 
 
+// 콤마 제거
+function uncomma(str) { 
+    str = String(str); 
+    return str.replace(/[^\d]+/g, ''); 
+}
 
 </script>
 </html>

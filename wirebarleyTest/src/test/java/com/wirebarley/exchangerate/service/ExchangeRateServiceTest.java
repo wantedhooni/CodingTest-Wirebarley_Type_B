@@ -1,4 +1,4 @@
-package com.test.wirebarley.service.exchangerate;
+package com.wirebarley.exchangerate.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -6,13 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wirebarley.exchangerate.service.ExchangeRateServiceImpl;
 import com.wirebarley.exchangerate.type.ReceptionCountry;
 import com.wirebarley.exchangerate.type.RemittanceCountry;
 
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes= {ExchangeRateServiceImpl.class})
 public class ExchangeRateServiceTest {
 
@@ -46,11 +47,11 @@ public class ExchangeRateServiceTest {
 		
 		remittanceCountry = RemittanceCountry.USD;
 		receptionCountry = ReceptionCountry.KRW;
-		log.info("{} {}", exchangeRateSvc.calcReceptionPrice(remittanceCountry, receptionCountry, 100f) ,receptionCountry.getCode());
+		log.info("{} {}", exchangeRateSvc.calcReceptionPrice(remittanceCountry, receptionCountry, 10f) ,receptionCountry.getCode());
 		
 		remittanceCountry = RemittanceCountry.AUD;
 		receptionCountry = ReceptionCountry.KRW;
-		log.info("{} {}", exchangeRateSvc.calcReceptionPrice(remittanceCountry, receptionCountry, 100f), receptionCountry.getCode());
+		log.info("{} {}", exchangeRateSvc.calcReceptionPrice(remittanceCountry, receptionCountry, 10f), receptionCountry.getCode());
 	}
 	
 }

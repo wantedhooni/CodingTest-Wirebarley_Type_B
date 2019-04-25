@@ -9,13 +9,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
+
 public class ExchangeRateRes {
 
 	private RemittanceCountry remittanceCountry;
 	private ReceptionCountry receptionCountry;
-	private Float exchangeRate;
-	private Float calcPrice;
-	private Float receptionPrice;
+	private String exchangeRate;
+	private String calcPrice;
+	private String receptionPrice;
 	
 	@JsonSerialize
 	public String getReceptionCountryCode() {
@@ -26,4 +27,13 @@ public class ExchangeRateRes {
 	public String getRemittanceCountryCode() {
 		return remittanceCountry.getCode();
 	}
+
+	@Override
+	public String toString() {
+		return "ExchangeRateRes [remittanceCountry=" + remittanceCountry + ", receptionCountry=" + receptionCountry
+				+ ", exchangeRate=" + exchangeRate + ", calcPrice=" + calcPrice + ", receptionPrice=" + receptionPrice
+				+ "]";
+	}
+	
+	
 }
