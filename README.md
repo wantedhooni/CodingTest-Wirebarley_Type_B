@@ -12,8 +12,8 @@ Wirebarley CodingTest Type_B
 git clone https://github.com/wantedhooni/CodingTest-Wirebarley_Type_B.git
 cd CodingTest-Wirebarley_Type_B
 cd wirebarleyTest
-./mvnw package
-java -jar target/*.jar
+mvnw package
+java -jar targe\target\wirebarley-0.0.1-SNAPSHOT.jar
 ```
 
 브라우저에서 http://localhost:8080/ 접속
