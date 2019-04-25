@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>Title</title>
+</head>
+<body>
+	<h1>Hello2</h1>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<td>송금국가: </td>
+				<td><select id="RemittanceCountry" class="selectpicker"	onchange="getExchangeRate();" >
+				</select></td>
+			</tr>
+			<tr>
+				<td>수취국가: </td>
+				<td><select id="ReceptionCountry" class="selectpicker" onchange="getExchangeRate();">
+				</select></td>
+			</tr>
+			<tr>
+				<td>환율: </td>
+				<td><div id="ExchangeRate"></div></td>
+			</tr>
+			<tr>
+				<td>송금액 : </td>
+				<td><input id="input_price" type="number" min="0" max="10000" onkeyup="imsi(this);"> USD</td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="button" value="SUBMIT"	onclick="calcReceptionPrice();"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><div id="calcPrice"></div></td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="result">
+   </div>
+</body>
+
+<script type="text/javascript">
+$(function() {
+    console.log( "ready!" );
+    getRemittanceCountrys();
+    getReceptionCountrys();
+});
+
+
+
+function getRemittanceCountrys(){
+	$.ajax({
+	 type: "POST",
+	 url: "/getRemittanceCountrys",
+	 dataType:"json",
+	 success: function(result){
+	  //SELECT BOX 초기화           
+	  $("#RemittanceCountry").find("option").remove().end().append("<option value='' selected>NONE</option>");
+	  //배열 개수 만큼 option 추가
+	   $.each(result, function(i){
+	    $("#RemittanceCountry").append("<option value='"+result[i].code+"'>"+result[i].label+"("+result[i].code+")"+"</option>")
+	   });    
+	  },
+	   error: function (jqXHR, textStatus, errorThrown) {
+	   alert("오류가 발생하였습니다.");
+	  }                     
+	 });
+	}
+
+
+function getReceptionCountrys(){
+	$.ajax({
+	 type: "POST",
+	 url: "/getReceptionCountrys",
+	 dataType:"json",
+	 success: function(result){
+	  //SELECT BOX 초기화           
+	  $("#ReceptionCountry").find("option").remove().end().append("<option value=''>NONE</option>");
+	  //배열 개수 만큼 option 추가
+	   $.each(result, function(i){
+	    $("#ReceptionCountry").append("<option value='"+result[i].code+"'>"+result[i].label+"("+result[i].code+")"+"</option>")
+	   });    
+	  },
+	   error: function (jqXHR, textStatus, errorThrown) {
+	   alert("오류가 발생하였습니다.");
+	  }                     
+	 });
+	}
+
+function getExchangeRate(){
+	var remittanceCountryCode = $("#RemittanceCountry").val();
+	var receptionCountryCode = $("#ReceptionCountry").val();
+	
+	console.log("remittanceCountryCode :"+remittanceCountryCode );
+	console.log("receptionCountryCode :"+receptionCountryCode );
+	/*
+	if(remittanceCountryCode == '' || receptionCountryCode ==''){
+		return;
+	}
+	*/
+	$.ajax({
+		 type: "POST",
+		 url: "/getExchangeRate",
+		 dataType:"json",
+		 data:{
+			 remittanceCountry : remittanceCountryCode,
+			 receptionCountry : receptionCountryCode
+		 },
+		 success: function(result){
+		  //SELECT BOX 초기화           
+		  console.log(result);
+		  var exchangeRate = result.exchangeRate;
+		  exchangeRate = exchangeRate.toFixed(2);
+		  exchangeRate = addComma(exchangeRate); 
+		  $("#ExchangeRate").text(exchangeRate+ " "+ result.receptionCountryCode + "/" +result.remittanceCountryCode);
+		  },
+		   error: function (jqXHR, textStatus) {
+			   $("#ExchangeRate").text(jqXHR.responseText);
+		  }                     
+		 });
+
+}
+
+function calcReceptionPrice(){
+	var remittanceCountryCode = $("#RemittanceCountry").val();
+	var receptionCountryCode = $("#ReceptionCountry").val();
+	var price = $("#input_price").val();
+	
+	console.log("remittanceCountryCode :"+remittanceCountryCode );
+	console.log("receptionCountryCode :"+receptionCountryCode );
+	console.log("price :"+price );
+
+	$.ajax({
+		 type: "POST",
+		 url: "/calcReceptionPrice",
+		 dataType:"json",
+		 data:{
+			 remittanceCountry : remittanceCountryCode,
+			 receptionCountry : receptionCountryCode,
+			 price : price
+		 },
+		 success: function(result){
+		  console.log(result);
+		  var exchangeRate = result.exchangeRate;
+		  exchangeRate = exchangeRate.toFixed(2);
+		  exchangeRate = addComma(exchangeRate); 
+			  
+		  $("#calcPrice").text("수취금액은 " +result.calcPrice + " "+result.receptionCountryCode + " 입니다.");
+		  },
+		   error: function (jqXHR, textStatus, errorThrown) {
+			   alert(jqXHR.responseText);
+		  }                     
+		 });
+
+}
+
+function addComma(num) {
+	  var regexp = /\B(?=(\d{3})+(?!\d))/g;
+	  return num.toString().replace(regexp, ',');
+}
+
+function imsi(obj) {
+	var prev = "";
+	var regexp = /^\d*(\.\d{0,2})?$/;
+    if(obj.value.search(regexp)==-1) { 
+        obj.value = prev; 
+    } 
+    else { 
+        prev = obj.value; 
+    } 
+} 
+
+
+</script>
+</html>
