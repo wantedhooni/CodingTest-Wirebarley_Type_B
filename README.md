@@ -9,7 +9,7 @@ Wirebarley CodingTest Type_B
 <h2>구동방법</h2>
 
 ```
-git clone https://github.com/spring-projects/spring-petclinic.git
+git clone https://github.com/wantedhooni/CodingTest-Wirebarley_Type_B.git
 cd CodingTest-Wirebarley_Type_B
 cd wirebarleyTest
 ./mvnw package
