@@ -7,6 +7,7 @@ Wirebarley CodingTest Type_B
 - lombok
 
 <h2>구동방법</h2>
+
 ```
 git clone https://github.com/spring-projects/spring-petclinic.git
 cd CodingTest-Wirebarley_Type_B
@@ -14,6 +15,7 @@ cd wirebarleyTest
 ./mvnw package
 java -jar target/*.jar
 ```
+
 브라우저에서 http://localhost:8080/ 접속
 
 <h2>문제내용</h2>
